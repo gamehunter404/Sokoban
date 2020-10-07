@@ -16,23 +16,21 @@ class Map
 {
 public:
 	Map() {}
-	void InitMap(MapData& mapData)
+	void InitMap(std::vector<std::string> mapStrings)
 	{
-		std::vector<std::string> &mapStrings = mapData.map;
-
 		if (mapStrings.size() > 0) {
 
-			mMapHeight = mapStrings.size();
+			mapHeight = mapStrings.size();
 
 			if (mapStrings[0].size() > 0)
-				mMapWidth = mapStrings[0].size();
+				mapWidth = mapStrings[0].size();
 		}
 
-		mMap.resize(mMapHeight);
+		map.resize(mapHeight);
 
-		for (int i = 0; i < mMapHeight; i++)
+		for (int i = 0; i < mapHeight; i++)
 		{
-			for (int j = 0; j < mMapWidth; j++)
+			for (int j = 0; j < mapWidth; j++)
 			{
 				Chunck chunck;
 				switch (mapStrings[i][j])
@@ -40,7 +38,7 @@ public:
 				case MARK_TAEGET:
 					chunck.backFace = CHUNCK_TARGET;
 					chunck.frontFace = CHUNCK_NONE;
-					this->mTargetPositions.push_back({ i,j });
+					this->targetPositions.push_back({ i,j });
 
 					break;
 				case MARK_EMPTY:
@@ -62,40 +60,31 @@ public:
 					break;
 				}
 				chunck.pos = {i,j};
-				mMap[i].push_back(chunck);
+				map[i].push_back(chunck);
 			}
 		}
-	}
-
-	void DestoryMap()
-	{
-		this->mMapHeight = 0;
-		this->mMapWidth = 0;
-		this->mMap.clear();
-		this->mTargetPositions.clear();
-		this->playerPos = {0,0};
 	}
 
 	bool IsWall( Position pos)
 	{
 		
-		return mMap[pos.i][pos.j].frontFace == CHUNCK_WALL;
+		return map[pos.i][pos.j].frontFace == CHUNCK_WALL;
 	}
 
 	bool IsBox( Position pos)
 	{
 
-		return mMap[pos.i][pos.j].frontFace == CHUNCK_BOX;
+		return map[pos.i][pos.j].frontFace == CHUNCK_BOX;
 	}
 
 	bool IsOutsideMap( Position pos)
 	{
-		if (pos.i > mMapHeight || pos.i < 0)
+		if (pos.i > mapHeight || pos.i < 0)
 		{
 			return true;
 		}
 
-		if (pos.j > mMapWidth || pos.j < 0)
+		if (pos.j > mapWidth || pos.j < 0)
 		{
 			return true;
 		}
@@ -107,7 +96,7 @@ public:
 	{
 		if (IsOutsideMap(pos)) throw "position out of map";
 
-		return mMap[pos.i][pos.j].frontFace == CHUNCK_NONE && mMap[pos.i][pos.j].backFace == CHUNCK_TARGET;
+		return map[pos.i][pos.j].frontFace == CHUNCK_NONE && map[pos.i][pos.j].backFace == CHUNCK_TARGET;
 
 	}
 
@@ -115,7 +104,7 @@ public:
 	{
 		if (IsOutsideMap(pos)) throw "position out of map";
 
-		return mMap[pos.i][pos.j].frontFace == CHUNCK_NONE && mMap[pos.i][pos.j].backFace == CHUNCK_EMPTY;
+		return map[pos.i][pos.j].frontFace == CHUNCK_NONE && map[pos.i][pos.j].backFace == CHUNCK_EMPTY;
 
 	}
 
@@ -140,38 +129,38 @@ public:
 
 		if (IsWalkArea(target))
 		{
-			if (mMap[target.i][target.j].frontFace == CHUNCK_NONE)
+			if (map[target.i][target.j].frontFace == CHUNCK_NONE)
 			{
-				mMap[target.i][target.j].frontFace = mMap[source.i][source.j].frontFace;
-				mMap[source.i][source.j].frontFace = CHUNCK_NONE;
+				map[target.i][target.j].frontFace = map[source.i][source.j].frontFace;
+				map[source.i][source.j].frontFace = CHUNCK_NONE;
 			}
 		}
 	}
 
 	int Width()
 	{
-		return mMapWidth;
+		return mapWidth;
 	}
 	int Height()
 	{
-		return mMapHeight;
+		return mapHeight;
 	}
 
 	void Show()
 	{
-		for (int i = 0; i < mMapHeight; i++)
+		for (int i = 0; i < mapHeight; i++)
 		{
-			for (int j = 0; j < mMapWidth; j++)
+			for (int j = 0; j < mapWidth; j++)
 			{
 				if (j == 0) std::cout<< std::endl;
 
-				if (ChunckTypeMap.find(mMap[i][j].frontFace) != ChunckTypeMap.end())
+				if (ChunckTypeMap.find(map[i][j].frontFace) != ChunckTypeMap.end())
 				{
-					std::cout << ChunckTypeMap[mMap[i][j].frontFace];
+					std::cout << ChunckTypeMap[map[i][j].frontFace];
 				}
-				else if (ChunckTypeMap.find(mMap[i][j].backFace) != ChunckTypeMap.end())
+				else if (ChunckTypeMap.find(map[i][j].backFace) != ChunckTypeMap.end())
 				{
-					std::cout << ChunckTypeMap[mMap[i][j].backFace];
+					std::cout << ChunckTypeMap[map[i][j].backFace];
 				}
 
 			}
@@ -189,18 +178,18 @@ public:
 	}
 	std::vector<Position> GetTargetPosition()
 	{
-		return mTargetPositions;
+		return targetPositions;
 	}
 	ChunckType GetChunckType(Position pos)
 	{
-		return mMap[pos.i][pos.j].frontFace != CHUNCK_NONE? mMap[pos.i][pos.j].frontFace: mMap[pos.i][pos.j].backFace;
+		return map[pos.i][pos.j].frontFace != CHUNCK_NONE? map[pos.i][pos.j].frontFace: map[pos.i][pos.j].backFace;
 	}
 
 private:
-	int mMapWidth;
-	int mMapHeight;
-	std::vector<std::vector<Chunck>> mMap;
-	std::vector<Position> mTargetPositions;
+	int mapWidth;
+	int mapHeight;
+	std::vector<std::vector<Chunck>> map;
+	std::vector<Position> targetPositions;
 	Position playerPos;
 };
 

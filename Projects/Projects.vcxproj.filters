@@ -26,11 +26,5 @@
     <ClInclude Include="Common.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GameSetting.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,18 +11,6 @@ const char MARK_PLAYER = 'P';
 const char MARK_BOX = 'O';
 const char MARK_EMPTY = ' ';
 const char MARK_TAEGET = '.';
-const char* LEVEL_PATH = "Levels";
-const char* MAPFILETYPE = "txt";
-
-
-
-enum EGameState
-{
-	GAMESTATE_NONE = 0,
-	GAMESTATE_START,
-	GAMESTATE_PLAYING,
-	GAMESTATE_END
-};
 
 enum EInputType
 {
@@ -31,9 +19,6 @@ enum EInputType
 	INPUT_DOWN,
 	INPUT_LEFT,
 	INPUT_RIGHT,
-	INPUT_ENTER,//回车确认
-	INPUT_RESET,//重新恢复游戏
-	INPUT_ESC,//返回主菜单
 };
 
 enum ChunckType
@@ -89,14 +74,6 @@ struct Position
 
 };
 
-struct MapData
-{
-	std::vector<std::string> map;
-	std::string mapName;
-
-};
-
-//游戏设置结构体，保存着游戏的设置
 
 Position moveDirs[5] = {
 
@@ -104,4 +81,5 @@ Position moveDirs[5] = {
 };
 
 std::map<ChunckType, char> ChunckTypeMap;
+
 
